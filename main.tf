@@ -1,67 +1,60 @@
-data "aws_ami" "ubuntu" {
-  most_recent = true
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
+resource "aws_vpc" "sftp_vpc" {
+  cidr_block       = ""
+  instance_tenancy = "default"
 }
 
-# need to configure
 resource "aws_security_group" "sftp_sg" {
-  name_prefix = "sftp-"
-
-  ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
+  name_prefix = "sftp_security_group"
+  vpc_id = aws_vpc.sftp_vpc
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    # use your cidr blocks
+    cidr_blocks      = [""] 
+    ipv6_cidr_blocks = ["::/0"]
   }
 }
 
+resource "aws_subnet" "sftp_subnet" {
+  vpc_id            = aws_vpc.sftp_vpc
+  # utilize your own cidr block
+  cidr_block        = ""
+  availability_zone = var.region
+}
+
+resource "aws_key_pair" "key" {
+  key_name   = "sftp-key"
+  public_key = "" 
+  # generate using ssh key-gen rsa
+}
 
 resource "aws_instance" "web" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-
-
-  provisioner "remote-exec" {
-    inline = [
-      "sudo apt-get update",
-      "sudo apt-get install -y openssh-server",
-      "sudo mkdir -p /sftpusers",
-      "sudo chown root:root /sftpusers",
-      "sudo chmod 755 /sftpusers",
-      "echo 'Match User sftpuser' | sudo tee -a /etc/ssh/sshd_config",
-      "echo 'ChrootDirectory /sftpusers/%u' | sudo tee -a /etc/ssh/sshd_config",
-      "echo 'ForceCommand internal-sftp' | sudo tee -a /etc/ssh/sshd_config",
-      "echo 'AllowTcpForwarding no' | sudo tee -a /etc/ssh/sshd_config",
-      "echo 'X11Forwarding no' | sudo tee -a /etc/ssh/sshd_config",
-      "sudo systemctl restart sshd"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"  # Update based on the AMI's default user
-      private_key = file("~/.ssh/id_rsa") # need to figure out this ssh part
-      host        = self.public_ip
-    }
+  ami           = var.instance_ami
+  instance_type = var.instance_type
+  subnet_id     = aws_subnet.sftp_subnet
+  security_groups =  aws_security_group.sftp_sg
+  key_name = aws_key_pair.key
+  tags = {
+    Name = var.ec2_name
   }
 
-  tags = {
-    Name = "HelloWorld"
+  root_block_device {
+    volume_type = "gp3"
+    volume_size = var.ebs_volume_size
+  }
+
+  connection {
+      type        = "ssh"
+      user        = "root"  # Update based on the AMI's default user
+      private_key = file("~/{$username}/.ssh/id_rsa") 
+      host        = self.public_ip
+  }
+
+  provisioner "file" {
+    source = "/terraform-aws-sftp/sftp_script.sh"
+    destination = "/scripts/script.sh"
   }
 }
 
