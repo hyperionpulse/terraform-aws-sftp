@@ -20,6 +20,7 @@ This Terraform module provisions a basic AWS infrastructure for hosting an SFTP 
 | `instance_type`     | The instance type for the EC2 instance.                | string | `m1.xlarge`                       | `t2.micro`                         |
 | `region`            | The AWS region where the resources will be created.    | string | `us-east-1`                       | `us-east-1`                        |
 | `ebs_volume_size`   | The size of the root EBS volume in GB.                 | number | `8`                              | `8`                                |
+| `ebs_volume_type`   | The type of the root EBS volume. Example values: gp2, gp3, io1, io2, st1, sc1. | string | `gp3`                            | `gp3`                              |
 | `ec2_name`          | The tag name for the EC2 instance.                     | string | `sftp-ec2-terraform`              | `sftp-server`                      |
 | `public_key`        | The SSH public key for accessing the EC2 instance.     | string | n/a                              | `file("~/.ssh/id_rsa.pub")`        |
 | `username`          | The username for SSH connection.                       | string | n/a                              | `myuser`                           |
