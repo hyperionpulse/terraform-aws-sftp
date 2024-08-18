@@ -12,17 +12,17 @@ This Terraform module provisions a basic AWS infrastructure for hosting an SFTP 
 
 ## Inputs
 
-| Name                | Description                                             | Type   | Default | Example                            |
-|---------------------|---------------------------------------------------------|--------|---------|------------------------------------|
-| `cidr_block`        | The CIDR block for the VPC.                            | string | n/a     | `10.0.0.0/16`                      |
-| `subnet_cidr_block` | The CIDR block for the subnet.                         | string | n/a     | `10.0.1.0/24`                      |
-| `instance_ami`      | The AMI ID for the EC2 instance.                       | string | n/a     | `ami-0c55b159cbfafe1f0`            |
-| `instance_type`     | The instance type for the EC2 instance.                | string | n/a     | `t2.micro`                         |
-| `region`            | The AWS region where the resources will be created.    | string | n/a     | `us-east-1`                        |
-| `ebs_volume_size`   | The size of the root EBS volume in GB.                 | number | n/a     | `8`                                |
-| `ec2_name`          | The tag name for the EC2 instance.                     | string | n/a     | `sftp-server`                      |
-| `public_key`        | The SSH public key for accessing the EC2 instance.     | string | n/a     | `file("~/.ssh/id_rsa.pub")`        |
-| `username`          | The username for SSH connection.                       | string | n/a     | `myuser`                           |
+| Name                | Description                                             | Type   | Default                          | Example                            |
+|---------------------|---------------------------------------------------------|--------|----------------------------------|------------------------------------|
+| `cidr_block`        | The CIDR block for the VPC.                            | string | n/a                              | `10.0.0.0/16`                      |
+| `subnet_cidr_block` | The CIDR block for the subnet.                         | string | n/a                              | `10.0.1.0/24`                      |
+| `instance_ami`      | The AMI ID for the EC2 instance.                       | string | `ami-0ae8f15ae66fe8cda`           | `ami-0c55b159cbfafe1f0`            |
+| `instance_type`     | The instance type for the EC2 instance.                | string | `m1.xlarge`                       | `t2.micro`                         |
+| `region`            | The AWS region where the resources will be created.    | string | `us-east-1`                       | `us-east-1`                        |
+| `ebs_volume_size`   | The size of the root EBS volume in GB.                 | number | `8`                              | `8`                                |
+| `ec2_name`          | The tag name for the EC2 instance.                     | string | `sftp-ec2-terraform`              | `sftp-server`                      |
+| `public_key`        | The SSH public key for accessing the EC2 instance.     | string | n/a                              | `file("~/.ssh/id_rsa.pub")`        |
+| `username`          | The username for SSH connection.                       | string | n/a                              | `myuser`                           |
 
 ## Outputs
 
