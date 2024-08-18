@@ -41,7 +41,7 @@ resource "aws_instance" "web" {
   }
 
   root_block_device {
-    volume_type = "gp3"
+    volume_type = var.ebs_volume_type
     volume_size = var.ebs_volume_size
   }
 
@@ -53,7 +53,7 @@ resource "aws_instance" "web" {
   }
 
   provisioner "file" {
-    source = "/terraform-aws-sftp/sftp_script.sh"
+    source = "./variables.tf"
     destination = "/scripts/script.sh"
   }
 }
