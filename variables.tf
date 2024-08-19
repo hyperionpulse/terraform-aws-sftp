@@ -33,3 +33,28 @@ variable "ec2_name" {
   default     = "sftp-ec2-terraform"
   description = "The tag name for the EC2 instance."
 }
+
+variable "sg_name_prefix" {
+  type        = string
+  default     = "sftp_security_group"
+  description = "The prefix name for the security group"
+}
+
+variable "remote_directory" {
+  type        = string
+  default     = "/scripts/sftpscript.sh"
+  description = "The remote directory as to where the script to create a user is configured."
+}
+
+variable "cidr_blocks_ipv4" {
+  type = list(string)
+  default = [ "10.10.1.0/24","10.10.2.0/24","10.10.3.0/24","10.10.4.0/24","10.10.5.0/24" ]
+  description = "The CIDR Blocks are stored to configure the security group."  
+}
+
+variable "cidr_block" {
+  type = string
+  default = "10.10.6.0/24"
+  description = "The CIDR Block used to configure the VPC and Subnet"
+  
+}
