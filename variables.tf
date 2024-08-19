@@ -55,6 +55,17 @@ variable "cidr_blocks_ipv4" {
 variable "cidr_block" {
   type = string
   default = "10.10.6.0/24"
-  description = "The CIDR Block used to configure the VPC and Subnet"
-  
+  description = "The CIDR Block used to configure the VPC and Subnet."
+}
+
+variable "key_name" {
+  type = string
+  default = "sftp-key"
+  description = "The key pair name of the EC2 instance." 
+}
+
+variable "linux_user" {
+  type = string
+  default = "root"
+  description = "Username that will remotely enter the instance to configure settings." 
 }

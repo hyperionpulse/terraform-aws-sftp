@@ -26,7 +26,7 @@ resource "aws_subnet" "sftp_subnet" {
 }
 
 resource "aws_key_pair" "key" {
-  key_name   = "sftp-key"
+  key_name   = var.key_name
   public_key = "" 
   # generate a public key and this key will be the only key users can utilize to SSH into the instance
 }
@@ -48,7 +48,7 @@ resource "aws_instance" "web" {
 
   connection {
       type        = "ssh"
-      user        = "root"  # Update based on the AMI's default user
+      user        = var.linux_user  # Update based on the AMI's default user
       private_key = file("~/{$username}/.ssh/id_rsa") 
       host        = self.public_ip
   }
